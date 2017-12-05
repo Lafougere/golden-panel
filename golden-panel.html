@@ -1,0 +1,295 @@
+<link rel="import" href="../shadycss/apply-shim.html">
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../golden-gem/golden-gem.html">
+<link rel="import" href="../golden-scrollable/golden-scrollable.html">
+<dom-module id="golden-panel">
+<template>
+	<style>
+		:host {
+			display: block;
+			image-rendering: pixelated;
+			margin: 20px 2px;
+			position: relative;
+			color: #ccc;
+			box-sizing: border-box;
+			cursor: url(../golden-assets/images/cursors/cursor_brown.gif), pointer;
+		}
+		:host * {
+			box-sizing: border-box;
+			font-family: FreePixel;
+		}
+		.frame {
+			height: 100%;
+			position: relative;
+			padding: 5px;
+			background: url(../golden-assets/images/frame/frame_top_left.png) top left no-repeat,
+				url(../golden-assets/images/frame/frame_top_right.png) top right no-repeat,
+				url(../golden-assets/images/frame/frame_bottom_left.png) bottom left no-repeat,
+				url(../golden-assets/images/frame/frame_bottom_right.png) bottom right no-repeat;
+		}
+		.frame:before {
+			content: '';
+			height: 100%;
+			width: calc(100% - 64px);
+			position: absolute;
+			top:0;
+			left:32px;
+			background: url(../golden-assets/images/frame/frame_top.gif) top center repeat-x,
+				url(../golden-assets/images/frame/frame_bottom.gif) bottom center repeat-x;
+			background-color: #595652;
+		}
+		.frame:after {
+			content: '';
+			height: calc(100% - 64px);
+			width: 100%;
+			position: absolute;
+			top: 32px;
+			left:0;
+			background: url(../golden-assets/images/frame/frame_left.gif) left center repeat-y,
+				url(../golden-assets/images/frame/frame_right.gif) right center repeat-y;
+		}
+		.content {
+			position: relative;
+			z-index: 1;
+			height: 100%;
+			width: 100%;
+			padding-top: 5px;
+			background-color: #595652;
+			min-height: 30px;
+		}
+
+		header {
+			white-space: nowrap;
+			position: absolute;
+			top: -14px;
+			width: 100%;
+			line-height: 14px;
+			max-width: 100%;
+			padding: 0 25px;
+			z-index: 2;
+		}
+		header.center {
+			text-align: center;
+		}
+		header.right {
+			text-align: right;
+		}
+		h3 {
+            margin: 0;
+            line-height: 24px;
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: inline-block;
+            position: relative;
+            height: 24px;
+            background: url(../golden-assets/images/frame_deco_middle.gif) repeat-x;
+            font-size: 17px;
+        }
+		h3:before {
+			position: absolute;
+			left:-14px;
+			top:0;
+			content:'';
+			background: url(../golden-assets/images/sprite2.png) -272px -172px;
+			width: 14px;
+			height: 24px;
+		}
+		h3:after {
+			position: absolute;
+			right:-14px;
+			top:0;
+			content:'';
+			background: url(../golden-assets/images/sprite2.png) -320px -172px;
+			width: 14px;
+			height: 24px;
+			display: table;
+			clear: both;
+		}
+		.body {
+			padding: 4px 6px;
+			text-align: left;
+			clear: both;
+			position: relative;
+			height: 100%;
+			font-size: 15px;
+			/*width: 100%;
+			overflow-x: auto; */
+		}
+		golden-gem:not(#close) {
+			position: relative;
+			margin:0 18px 0 0;
+			z-index: 1;
+			display: inline-block;
+			top: 3px;
+		}
+		golden-gem:not(#close):before {
+			background: url(../golden-assets/images/sprite2.png) -286px -172px;
+			width: 32px;
+			height: 24px;
+			position: absolute;
+			left: -5px;
+			top: -5px;
+			content: '';
+		}
+		golden-gem.hidden, golden-gem.hidden:before {
+			display: none !important;
+		}
+		footer ::slotted(golden-gem) {
+			margin: 4px;
+		}
+		footer {
+			position: absolute;
+			bottom: -11px;
+			top: auto;
+			padding: 0 15px;
+			width: 100%;
+			height: 24px;
+		}
+		footer.center {
+			text-align: center;
+		}
+		footer.right {
+			text-align: right;
+		}
+
+		.closable {
+			margin-top: 30px;
+		}
+		.closable header {
+			background: url(../golden-assets/images/frame_header_middle.gif) repeat-x;
+            height: 36px;
+            width: 100%;
+            top: -27px;
+            position: absolute;
+            left:0;
+            margin: 0;
+            float: none;
+            max-width: none;
+            padding: 0 25px;
+            background-clip: content-box;
+		}
+		.closable header:before {
+			background: url(../golden-assets/images/sprite2.png) -344px -239px;
+			height: 36px;
+			width: 30px;
+			top: 0;
+			/*z-index: 2;*/
+			left: -5px;
+			content:'';
+			position: absolute;
+		}
+		.closable header:after {
+			background:  url(../golden-assets/images/sprite2.png) -378px -235px;
+			height: 40px;
+			width: 30px;
+			right: -5px;
+			top:-4px;
+			content:'';
+			position: absolute;
+		}
+		.closable h3,.closable h3:before, .closable h3:after {
+			background: none;
+		}
+		.frame:not(.closable) #close {
+			display: none;
+		}
+		.closable #close {
+			display: block;
+			position: absolute;
+			right: 6px;
+			z-index: 100;
+			top: 1px;
+		}
+		nav.left {
+			position: absolute;
+			width: 24px;
+			left: -14px;
+			top: 15px;
+			display: flex;
+			flex-direction: column;
+		}
+		nav.left ::slotted(*){
+			margin-bottom: 8px;
+		}
+		nav.right {
+			position: absolute;
+			width: 24px;
+			right: -15px;
+			top: 15px;
+			display: flex;
+			flex-direction: column;
+		}
+		nav.right ::slotted(*){
+			margin-bottom: 8px;
+		}
+	</style>
+	<div class$="frame [[_closableClass(closable)]]">
+		<div class="content">
+			<header hidden$="{{!title}}" class$="[[titleAlign]]"><golden-gem class$="[[_hiddenClass(icon,closable)]] no-frame" color="[[color]]" icon="[[icon]]"></golden-gem><h3>{{title}}</h3><golden-gem id="close" color="red" icon="close" class="no-frame close" tabindex="-1" on-click="closePanel"></golden-gem></header>
+			<div class="body">
+				<golden-scrollable class="affixed"><slot></slot></golden-scrollable>
+			</div>
+			<footer class$="[[buttonsAlign]]">
+				<slot name="buttons"></slot>
+			</footer>
+			<nav class="left"><slot name="left-nav"></slot></nav>
+			<nav class="right"><slot name="right-nav"></slot></nav>
+		</div>
+	</div>
+</template>
+
+<script>
+/**
+* @customElement
+* @polymer
+*/
+class GoldenPanel extends Polymer.Element {
+	static get is() { return 'golden-panel'; }
+	static get properties() {
+		return {
+			title: {
+				type: String,
+				value: ''
+			},
+			titleAlign: {
+				type: String,
+				value: 'left'
+			},
+			buttonsAlign: {
+				type: String,
+				value: 'left'
+			},
+			icon:{
+				type: String,
+				value: ''
+			},
+			color:{
+				type: String,
+				value: ''
+			},
+			size: {
+				type: Number,
+				value: 1
+			},
+			closable: {
+				type: Boolean,
+				value: false
+			}
+		}
+	}
+	_hiddenClass(icon, closable){
+		return (icon && !closable) ? '' : 'hidden'
+	}
+	_closableClass(closable){
+		return closable ? 'closable' : ''
+	}
+	closePanel(e){
+		var event = new CustomEvent('panel-close', e)
+		this.dispatchEvent(event)
+	}
+}
+
+window.customElements.define(GoldenPanel.is, GoldenPanel)
+</script>
+</dom-module>
