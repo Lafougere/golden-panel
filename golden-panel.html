@@ -58,6 +58,7 @@
 			min-height: 30px;
 		}
 
+
 		header {
 			white-space: nowrap;
 			position: absolute;
@@ -105,6 +106,29 @@
 			height: 24px;
 			display: table;
 			clear: both;
+		}
+		:host(.bigtitle) .body {
+			padding-top: 40px;
+		}
+		:host(.bigtitle) h3 {
+			background: url(../golden-assets/images/bigframe_middle2.gif) repeat-x;
+			height: 64px;
+			font-size: 45px;
+			line-height: 66px;
+		}
+		:host(.bigtitle) h3:before {
+			background: url(../golden-assets/images/sprite2.png) 0 -232px;
+			height: 64px;
+			width: 32px;
+			position: absolute;
+			left: -32px;
+		}
+		:host(.bigtitle) h3:after {
+			background: url(../golden-assets/images/sprite2.png) -34px -232px;
+			height: 64px;
+			width: 32px;
+			position: absolute;
+			right: -32px;
 		}
 		.body {
 			padding: 4px 6px;
