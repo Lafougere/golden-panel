@@ -86,6 +86,8 @@
             position: relative;
             height: 24px;
             background: url(../golden-assets/images/frame_deco_middle.gif) repeat-x;
+			font-smooth: never;
+			-webkit-font-smoothing : none;
             font-size: 17px;
         }
 		h3:before {
@@ -123,6 +125,7 @@
 			width: 32px;
 			position: absolute;
 			left: -32px;
+			content: '';
 		}
 		:host(.bigtitle) h3:after {
 			background: url(../golden-assets/images/sprite2.png) -34px -232px;
@@ -130,6 +133,7 @@
 			width: 32px;
 			position: absolute;
 			right: -32px;
+			content: '';
 		}
 		.body {
 			padding: 4px 6px;
